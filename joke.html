@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Joke</title>
+</head>
+<body>
+<h1>Joke</h1>
+<p id="joke-type"></p>
+<p id="joke-setup"></p>
+<p id="joke-punchline" style="display: none;"></p>
+<button id="reveal-button">Reveal punchline</button>
+
+<script src="js/main.js"></script>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const jokeId = urlParams.get("id");
+  const jokeType = document.getElementById("joke-type");
+  const jokeSetup = document.getElementById("joke-setup");
+  const jokePunchline = document.getElementById("joke-punchline");
+  const revealButton = document.getElementById("reveal-button");
+
+  // Render a single joke with a button to reveal the punchline
+  async function renderJoke() {
+    const joke = await getJokeById(jokeId);
+    jokeType.textContent = `Type: ${joke.type}`;
+    jokeSetup.textContent = `Setup: ${joke.setup}`;
+    jokePunchline.textContent = `Punchline: ${joke.punchline}`;
+    jokePunchline.dataset.punchline = joke.punchline;
+  }
+
+  // Show the punchline when the reveal button is clicked
+  revealButton.addEventListener("click", () => {
+    revealButton.style.display = "none";
+    jokePunchline.style.display = "";
+  });
+
+  // Render the initial joke
+  renderJoke();
+</script>
+</body>
+</html>

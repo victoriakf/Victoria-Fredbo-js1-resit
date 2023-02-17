@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jokes</title>
+</head>
+<body>
+<h1>Jokes</h1>
+<div>
+  <label for="filter">Filter by type:</label>
+  <select id="filter">
+    <option value="all">All</option>
+    <option value="general">General</option>
+    <option value="programming">Programming</option>
+  </select>
+  <button id="apply-filter">Apply Filter</button>
+</div>
+<ul id="jokes-list"></ul>
+
+<script src="js/main.js"></script>
+<script>
+  const filterSelect = document.getElementById("filter");
+  const applyFilterButton = document.getElementById("apply-filter");
+  const jokesList = document.getElementById("jokes-list");
+
+  // Render a list of jokes with a link to view each joke's punchline
+  async function renderJokes() {
+    const jokes = await getAllJokes();
+    jokesList.innerHTML = "";
+    jokes.forEach((joke) => {
+      const jokeItem = document.createElement("li");
+      jokeItem.textContent = joke.setup;
+      const jokeLink = document.createElement("a");
+      jokeLink.href = `joke.html?id=${joke.id}`;
+      jokeLink.textContent = 'View Punchline';
+      jokeLink.setAttribute("data-type", joke.type);
+      jokeItem.appendChild(jokeLink);
+      jokesList.appendChild(jokeItem);
+    });
+  }
+
+  // Apply the selected filter to the jokes list
+  function applyFilter() {
+    const selectedFilter = filterSelect.value;
+    const jokeItems = jokesList.querySelectorAll("li");
+    jokeItems.forEach((jokeItem) => {
+      const jokeType = jokeItem.querySelector("a").dataset.type;
+      if (selectedFilter === "all" || selectedFilter === jokeType) {
+        jokeItem.style.display = "";
+      } else {
+        jokeItem.style.display = "none";
+      }
+    });
+  }
+
+  // Add an event listener to the apply filter button
+  applyFilterButton.addEventListener("click", applyFilter);
+
+  // Render the initial list of jokes
+  renderJokes();
+</script>
+</body>
+</html>
